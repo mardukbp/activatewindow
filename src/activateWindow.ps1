@@ -19,7 +19,8 @@ $procs=@{}
 Get-Process | Where { 
     ($_.MainWindowTitle -ne "") -and 
     ($_.MainWindowHandle -ne $ActiveHandle) -and
-    ($_.ProcessName -ne "TextInputHost")
+    ($_.ProcessName -ne "TextInputHost") -and
+    ($_.ProcessName -ne "ShellExperienceHost")
 } | foreach { $procs[$_.MainWindowTitle] = $_.MainWindowHandle }
 
 $window = echo $procs.keys | hs
