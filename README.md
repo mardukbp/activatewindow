@@ -6,11 +6,17 @@ Window switcher for Windows inspired by [rofi](https://github.com/davatorium/rof
 
 Icon by [dryicons](https://dryicons.com/icon/windows-7037)
 
+## Installation
+
+* Download the [latest release](https://github.com/mardukbp/activatewindow/releases/latest)
+
+* Launch `activatewindow`, pin it to the taskbar and drag it to the first position. Now it can be summoned with `Windows + 1`.
+
 ## Notes 
 
 * It works for me on Windows 10, YMMV.
 
-* It is assumed that `powershell.exe` is in your `%PATH%`.
+* It is assumed that `powershell.exe` is in your `%PATH%`. 
 
 ## Building
 
