@@ -27,7 +27,7 @@ Icon by [dryicons](https://dryicons.com/icon/windows-7037)
 * [warp-packer](https://github.com/dgiagio/warp)
 * [ResourceHacker](http://www.angusj.com/resourcehacker/)
 
-3. Download [heatseeker](https://github.com/rschmitt/heatseeker) to the `src` directory.
+3. Build [heatseeker](https://github.com/rschmitt/heatseeker) [using static linking](https://github.com/rschmitt/heatseeker/issues/45) and copy it to the `src` directory.
 
 4. Execute the `build.bat` script.
 
