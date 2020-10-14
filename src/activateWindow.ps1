@@ -34,9 +34,10 @@ Add-Type  @"
 
         public static string GetTitle(IntPtr hWnd) {
             var len = GetWindowTextLength(hWnd);
-            StringBuilder message = new StringBuilder(len + 1);
-            GetWindowText(hWnd, message, message.Capacity);
-            return message.ToString();
+            // Window title plus null terminator
+            StringBuilder title = new StringBuilder(len + 1);
+            GetWindowText(hWnd, title, title.Capacity);
+            return title.ToString();
         }
     }
 "@
