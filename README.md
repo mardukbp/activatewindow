@@ -22,7 +22,7 @@ Icon by [dryicons](https://dryicons.com/icon/windows-7037)
 
 1. Clone this repository.
 
-2. Download the following programs to the `build` directory:
+2. Download the following programs to this directory:
 
 * [warp-packer](https://github.com/dgiagio/warp)
 * [ResourceHacker](http://www.angusj.com/resourcehacker/)
