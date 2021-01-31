@@ -5,18 +5,18 @@ Add-Type  @"
     
     public class Win32
     {
-        public delegate void ThreadDelegate(IntPtr hWnd, IntPtr lParam);
+        public delegate void ThreadDelegate(IntPtr hWnd, int lParam);
         
         [DllImport("user32.dll")]
         public static extern bool EnumThreadWindows(int dwThreadId, ThreadDelegate lpfn,
-            IntPtr lParam);
+            int lParam);
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
-        
+
         [DllImport("user32.dll")]
         public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
         
@@ -49,17 +49,21 @@ $ActiveHandle = [Win32]::GetForegroundWindow()
 
 $windows = @{}
 
-Get-Process | Where { $_.MainWindowTitle -and 
+Get-Process | where { ($_.ProcessName -eq "explorer") -or $_.MainWindowTitle -and 
                       ($_.MainWindowHandle -ne $ActiveHandle) -and
-                      ($_.ProcessName -ne "TextInputHost") -and
-                      ($_.ProcessName -ne "ShellExperienceHost")
+                      ($_.ProcessName -ne "WindowsInternal.ComposableShell.Experiences.TextInput.InputApp") -and
+                      ($_.Threads.WaitReason -ne "Suspended") -and
+                      ($_.ProcessName -ne "ApplicationFrameHost")
                     } | 
 foreach {
-    $_.Threads.ForEach({
+    $_.Threads.foreach({
         [void][Win32]::EnumThreadWindows($_.Id, {
             param($hwnd, $lparam)
             if ([Win32]::IsIconic($hwnd) -or [Win32]::IsWindowVisible($hwnd)) {
-                $windows[[Win32]::GetTitle($hwnd)] = $hwnd 
+                $title=[Win32]::GetTitle($hwnd)
+                if ($title -and ($title -ne "Program Manager")) {
+                    $windows[$title] = $hwnd
+                }
             }}, 0)
         })
 }
@@ -69,7 +73,9 @@ $window = echo $windows.keys | hs
 if($window) {
     $iconic = [Win32]::IsIconic($windows[$window])
     if ($iconic) {
-        [Win32]::ShowWindowAsync($windows[$window], 3) | Out-Null
+        # https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
+        # 9: SW_RESTORE
+        [Win32]::ShowWindowAsync($windows[$window], 9) | Out-Null
     }
     [Win32]::SetForegroundWindow($windows[$window]) | Out-Null
 }
