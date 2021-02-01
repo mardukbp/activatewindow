@@ -62,7 +62,13 @@ foreach {
             if ([Win32]::IsIconic($hwnd) -or [Win32]::IsWindowVisible($hwnd)) {
                 $title=[Win32]::GetTitle($hwnd)
                 if ($title -and ($title -ne "Program Manager")) {
-                    $windows[$title] = $hwnd
+                    if ($windows.ContainsKey($title)) {
+                      $id=$windows[$title].id + 1
+                      $windows[$title + " (${id})"] = @{hwnd=$hwnd; id=$id}
+                    }
+                    else {
+                        $windows[$title] = @{hwnd=$hwnd; id=0}
+                    }
                 }
             }}, 0)
         })
@@ -71,11 +77,11 @@ foreach {
 $window = echo $windows.keys | hs
 
 if($window) {
-    $iconic = [Win32]::IsIconic($windows[$window])
+    $iconic = [Win32]::IsIconic($windows[$window].hwnd)
     if ($iconic) {
         # https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
         # 9: SW_RESTORE
-        [Win32]::ShowWindowAsync($windows[$window], 9) | Out-Null
+        [Win32]::ShowWindowAsync($windows[$window].hwnd, 9) | Out-Null
     }
-    [Win32]::SetForegroundWindow($windows[$window]) | Out-Null
+    [Win32]::SetForegroundWindow($windows[$window].hwnd) | Out-Null
 }
