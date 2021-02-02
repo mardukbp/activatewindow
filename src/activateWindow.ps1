@@ -52,6 +52,7 @@ $windows = @{}
 Get-Process | where { ($_.ProcessName -eq "explorer") -or $_.MainWindowTitle -and 
                       ($_.MainWindowHandle -ne $ActiveHandle) -and
                       ($_.ProcessName -ne "WindowsInternal.ComposableShell.Experiences.TextInput.InputApp") -and
+                      ($_.ProcessName -ne "TextInputHost") -and
                       ($_.Threads.WaitReason -ne "Suspended") -and
                       ($_.ProcessName -ne "ApplicationFrameHost")
                     } | 
